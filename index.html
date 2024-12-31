@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Viewer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .code-container {
+            margin-top: 1rem;
+            position: relative;
+            background-color: #272727;
+            color: #f5f5f5;
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow: auto;
+        }
+        .code-container pre {
+            margin: 0;
+            font-family: "Fira Code", monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .code-buttons {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+        .button {
+            font-size: 12px;
+            padding: 0.25rem 0.5rem;
+        }
+        .tabs {
+            margin-bottom: 0;
+        }
+        .output {
+            margin-top: 1rem;
+            display: none;
+            padding: 1rem;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            color: #363636;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">Code Viewer</h1>
+            
+            <!-- Tabs -->
+            <div class="tabs is-centered is-boxed">
+                <ul>
+                    <li class="is-active" data-target="html-code"><a>HTML</a></li>
+                    <li data-target="css-code"><a>CSS</a></li>
+                    <li data-target="js-code"><a>JavaScript</a></li>
+                </ul>
+            </div>
+
+            <!-- HTML Code -->
+            <div class="code-container" id="html-code">
+                <pre>
+&lt;div class="hello-world"&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+&lt;/div&gt;
+                </pre>
+            </div>
+
+            <!-- CSS Code -->
+            <div class="code-container" id="css-code" style="display: none;">
+                <pre>
+.hello-world {
+    font-family: Arial, sans-serif;
+    color: blue;
+    text-align: center;
+}
+                </pre>
+            </div>
+
+            <!-- JavaScript Code -->
+            <div class="code-container" id="js-code" style="display: none;">
+                <pre>
+document.querySelector('.hello-world h1').textContent = "Hello, JavaScript!";
+                </pre>
+            </div>
+
+            <!-- Buttons -->
+            <div class="code-buttons">
+                <button class="button is-info" id="copy-btn">📋 Salin</button>
+                <button class="button is-success" id="output-btn">⚡ Output</button>
+            </div>
+
+            <!-- Output -->
+            <div class="output" id="output-box">
+                <strong>Output:</strong>
+                <pre id="output-content">Lihat hasil kode Anda di sini!</pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        const tabs = document.querySelectorAll('.tabs ul li');
+        const codeContainers = document.querySelectorAll('.code-container');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Reset active state
+                tabs.forEach(t => t.classList.remove('is-active'));
+                codeContainers.forEach(c => c.style.display = 'none');
+
+                // Activate the selected tab
+                tab.classList.add('is-active');
+                document.getElementById(tab.dataset.target).style.display = 'block';
+            });
+        });
+
+        // Salin Kode
+        const copyBtn = document.getElementById('copy-btn');
+        copyBtn.addEventListener('click', () => {
+            const activeCode = document.querySelector('.code-container:not([style*="display: none"]) pre').textContent;
+            navigator.clipboard.writeText(activeCode).then(() => {
+                copyBtn.textContent = '✅ Tersalin!';
+                setTimeout(() => copyBtn.textContent = '📋 Salin', 2000);
+            });
+        });
+
+        // Output Toggle
+        const outputBtn = document.getElementById('output-btn');
+        const outputBox = document.getElementById('output-box');
+        outputBtn.addEventListener('click', () => {
+            outputBox.style.display = outputBox.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>
